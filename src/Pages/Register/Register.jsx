@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import registerImg from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 import toast from 'react-hot-toast'
 import { FaGoogle, FaGithub } from 'react-icons/fa';
+import getJwtToken from '../../utilities/auth';
 const Register = () => {
     const [showStatus, setShowStatus] = useState(false)
     const { createAccount, userProfileUpdate, setCreatedStatus, createdStatus, LoginWithGoogle } = useContext(AuthContext)
-
+    const navigate = useNavigate()
     const handleRegister = event => {
         event.preventDefault()
         const form = event.target
@@ -22,11 +23,16 @@ const Register = () => {
                 const user = res.user
                 if (user.uid) {
                     toast.success('You have created an account succefully!!!')
+                    const currentUser = {
+                        email: user?.email 
+                    }
+                    getJwtToken(currentUser)
                 }
                 userProfileUpdate(profile)
                     .then(res => {
                         // console.log(res.user)
                         setCreatedStatus(!createdStatus)
+                        navigate('/')
                     })
                     .catch(e => {
                         console.log(e)
@@ -44,8 +50,12 @@ const Register = () => {
     const handleGoogleLogin = () => {
         LoginWithGoogle()
             .then(res => {
-                console.log(res.user)
                 toast.success('Successfully Login!!')
+                const currentUser = {
+                    email: res.user?.email
+                }
+                getJwtToken(currentUser)
+                navigate('/')
             })
             .catch(e => {
                 console.log(e)
@@ -56,6 +66,9 @@ const Register = () => {
     const handlePasswordShow = () => {
         setShowStatus(!showStatus)
     }
+
+
+
     return (
         <div className="hero w-full bg-base-200 ">
             <div className="hero-content grid md:grid-cols-2 flex-col lg:flex-row">

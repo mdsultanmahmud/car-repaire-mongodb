@@ -3,6 +3,7 @@ import loginImg from '../../assets/images/login/login.svg'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast'
 import { AuthContext } from '../../context/AuthProvider';
+import getJwtToken from '../../utilities/auth';
 const Login = () => {
     const [showStatus, setShowStatus] = useState(false)
     const {loginUser} = useContext(AuthContext)
@@ -37,20 +38,6 @@ const Login = () => {
         setShowStatus(!showStatus)
     }
 
-    // get jwt token
-    const getJwtToken = (crntUser) =>{
-        fetch('https://car-with-mongodb-server.vercel.app/jwt',{
-            method:'POST', 
-            headers:{
-                'content-type':'application/json'
-            },
-            body: JSON.stringify(crntUser)
-        })
-        .then(res =>res.json())
-        .then(data =>{
-            localStorage.setItem('token', data.token)
-        })
-    }
     return (
         <div className="hero w-full bg-base-200">
             <div className="hero-content grid md:grid-cols-2 flex-col lg:flex-row">
