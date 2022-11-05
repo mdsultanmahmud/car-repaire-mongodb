@@ -7,7 +7,7 @@ import { FaGoogle, FaGithub } from 'react-icons/fa';
 import getJwtToken from '../../utilities/auth';
 const Register = () => {
     const [showStatus, setShowStatus] = useState(false)
-    const { createAccount, userProfileUpdate, setCreatedStatus, createdStatus, LoginWithGoogle } = useContext(AuthContext)
+    const { createAccount, userProfileUpdate, setCreatedStatus, createdStatus, LoginWithGoogle,loginWithGithub } = useContext(AuthContext)
     const navigate = useNavigate()
     const handleRegister = event => {
         event.preventDefault()
@@ -46,6 +46,10 @@ const Register = () => {
             })
     }
 
+    // change password input type 
+    const handlePasswordShow = () => {
+        setShowStatus(!showStatus)
+    }
 
     const handleGoogleLogin = () => {
         LoginWithGoogle()
@@ -63,10 +67,22 @@ const Register = () => {
             })
     }
 
-    const handlePasswordShow = () => {
-        setShowStatus(!showStatus)
+    const handleGithubLogin = () =>{
+        loginWithGithub()
+        .then(res => {
+            toast.success('Successfully Login!!')
+            const currentUser = {
+                email: res.user?.email
+            }
+            getJwtToken(currentUser)
+            navigate('/')
+        })
+        .catch(e => {
+            console.log(e)
+            toast.error(e.message)
+        })
     }
-
+    
 
 
     return (
@@ -106,7 +122,7 @@ const Register = () => {
                     <hr />
                     <div className='flex justify-center mt-5'>
                         <FaGoogle onClick={handleGoogleLogin} className='text-4xl font-bold mr-4 cursor-pointer'></FaGoogle>
-                        <FaGithub className='text-4xl font-bold cursor-pointer'></FaGithub>
+                        <FaGithub onClick={handleGithubLogin} className='text-4xl font-bold cursor-pointer'></FaGithub>
                     </div>
                     <p className='py-4 mx-auto'>Have you an account?? Please <Link className='text-orange-600' to='/login'>Login!</Link> </p>
                 </div>
