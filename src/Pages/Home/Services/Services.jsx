@@ -7,7 +7,7 @@ const Services = () => {
     const [searchString, setSearchString] = useState('')
     const searchRef = useRef()
     useEffect(() => {
-        fetch(`http://localhost:5000/services?search=${searchString}&order=${isAsc ? 'asc' : 'des'}`)
+        fetch(`https://car-with-mongodb-server.vercel.app/services?search=${searchString}&order=${isAsc ? 'asc' : 'des'}`)
             .then(res => res.json())
             .then(data => setServicesItem(data))
     }, [isAsc, searchString])
